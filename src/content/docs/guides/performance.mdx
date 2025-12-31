@@ -1,0 +1,138 @@
+---
+title: Performance
+description: Performance tweaks and fixes
+prev:
+    link: /guides/change-language
+---
+
+import { Steps, FileTree } from '@astrojs/starlight/components';
+
+## Run IW4x with the high performance GPU
+
+One of the most common causes of bad performance is the game running against the **integrated GPU** instead of the **dedicated GPU** in a system that has both.
+
+In order to solve this, you can configure the IW4x application to run against the high performance GPU with the steps below, depending on the operating system you are using:
+
+### Windows
+
+<Steps>
+
+1. Navigate to `Display > Graphics settings > Graphics performance preference` in your Windows Settings.
+2. If you have the option to select specific apps in the graphics settings, set the IW4x app to use the high performance GPU.
+
+</Steps>
+
+If you have an Nvidia GPU, this can be applied via the Nvidia Control Panel:
+
+<Steps>
+
+1. Navigate to `3D settings` in the Nvidia Control Panel app.
+2. Choose `select a specific program` and set the IW4x app to use your high performance GPU.
+
+</Steps>
+
+Thanks to **@joel_rpc** for outlining these steps.
+
+### Linux MESA (AMD or Intel graphics cards)
+
+The environment variable `MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE=<ID>` should be applied if using Mesa drivers to tell the game what graphics card it should use, where `<ID>` is the identifier number of the graphics card you wish to use.
+
+In order to get the ID numbers of your graphics cards, you may run `vulkaninfo --summary` and look for the `Devices:` section of this output. An example of this output may be:
+
+```
+Devices:
+========
+GPU0:
+	apiVersion         = 1.4.311
+	driverVersion      = 25.1.9
+	vendorID           = 0x0000
+	deviceID           = 0x0000
+	deviceType         = PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+	deviceName         = AMD Radeon RX 6900 XT (RADV NAVI21) # This is the important part.
+	...
+GPU1:
+    ...
+    deviceName         = <the wrong graphics card> # We likely do not want to use this one.
+    ...
+```
+
+In which case, the desired GPU would have an `<ID>` of `0`.
+
+If you do not have the command `vulkaninfo`, please consult your Linux distributions documentation on Vulkan tools.
+
+If you wish to apply this via Steam, such as in the case you are launching IW4x as a non-Steam game, you may follow these steps:
+
+<Steps>
+
+1. Right click on your IW4x non-Steam game entry in your Steam library.
+2. Left click on **Properties**.
+3. Add `MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE=<ID> %command%` to the **Launch Options** section, where `<ID>` is the ID number gathered above.
+
+</Steps>
+
+### Linux Nvidia
+
+The environment variables `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia` should be applied to tell the game to use the Nvidia graphics card.
+
+If you wish to apply this via Steam, such as in the case you are launching IW4x as a non-Steam game, you may follow these steps:
+
+<Steps>
+
+1. Right click on your IW4x non-Steam game entry in your Steam library.
+2. Left click on **Properties**.
+3. Add `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia %command%` to the **Launch Options** section.
+
+</Steps>
+
+If your distribution has documentation around **Nvidia Optimus**, you may consult that as well.
+
+---
+
+## DXVK
+
+DXVK is a translation layer for Direct3D -> Vulkan, and can be particularly useful on Intel ARC graphics cards if you are facing issues.
+
+Additionally, in some cases, DXVK can grant better performance and lessen stutters, and can be enabled via the IW4x launcher.
+
+:::note
+The following instructions assume you have already run the IW4x launcher at least once.
+:::
+
+### Installing DXVK
+
+Once you've installed IW4x, you should see the following folder and files in your game directory:
+
+<FileTree>
+- `Call of Duty: Modern Warfare 2`
+  - iw4x/
+  - **launcher**
+    - cache.json
+    - **config.json**
+    - log.log
+  - iw4x.exe
+  - iw4x-launcher.exe
+  - ... other files and folders
+</FileTree>
+
+If you open **config.json** in a text editor (such as Notepad), you'll see something like this:
+
+```json title="launcher/config.json"
+{
+  "update_only": false,
+  "skip_self_update": false,
+  "force_update": false,
+  "args": "-stdout",
+  "offline": false,
+  "testing": false,
+  "disable_art": false,
+  "dxvk": false
+}
+```
+
+The important option here is `"dxvk": false`. Change the `false` after `"dxvk":` to `true`, and then run the launcher.
+
+### Uninstalling DXVK
+
+If you would like to uninstall DXVK, repeat the same steps as in **Installing DXVK** above, but changing `"dxvk":` back to `false`.
+
+After doing this, delete the `d3d9.dll` file from the game folder.
