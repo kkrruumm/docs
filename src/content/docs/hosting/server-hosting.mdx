@@ -1,0 +1,649 @@
+---
+title: Setting up a Server
+description: Setup and host servers on IW4x
+---
+
+
+
+import { Steps, LinkCard, LinkButton, FileTree, Icon } from '@astrojs/starlight/components';
+
+
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+
+
+<Steps>
+
+1. **Required Game Files** (required for the server to run)
+    
+     You need a **legitimate copy of Call of Duty: Modern Warfare 2 (2009) Multiplayer**.
+     - [Steam - Call of Duty: Modern Warfare 2 (2009)](https://store.steampowered.com/app/10180/)
+    
+2. **A text editor** for editing configuration files
+    
+    - [Visual Studio Code](https://code.visualstudio.com/) (recommended for beginners)
+    - [Notepad++](https://notepad-plus-plus.org/)
+    - [Sublime Text](https://www.sublimetext.com/)
+</Steps>
+
+
+
+:::note[Text Editor]
+Do not use Windows Notepad. It doesn't handle line endings properly and may corrupt your configuration files.
+:::
+
+
+
+### Hosting Requirements
+
+:::note[Exceptions]
+These may not apply to LAN servers/Users hosting privately. This mostly applies to users looking to have a public server for ALL IW4x user's.
+
+Users hosting LAN/Privately can avoid port forwarding with VLAN softwares like Hamachi, Tailscale, RAdmin, etc.
+:::
+
+Your server needs:
+- **Always-on availability**: A computer or VPS that can be online 24/7
+- **Stable internet connection**: At least 5-10 Mbps upload speed
+- **Hardware specifications**: Modern hardware (~500mb RAM per server, 2 core cpu, no gpu required)
+- **Network access**: Ability to forward ports on your router (if hosting from home) or firewall access (if using a VPS)
+
+
+
+:::tip[**VPS Recommended**]
+
+For public servers that need high uptime, we strongly recommend using a Virtual Private Server (VPS) instead of hosting from home. VPS providers offer better uptime, faster connections, and avoid exposing your home network.
+
+:::
+---
+---
+
+
+
+### Understanding Server Types
+
+IW4x supports two types of servers. Understanding the difference will help you choose the right setup:
+
+
+
+##### Match Server (Dedicated Server)
+
+A traditional dedicated server where players join to play matches with specific game modes and map rotations.
+
+    **Use this when you want:**
+
+- Specific multiplayer matches (Team Deathmatch, Search & Destroy, etc.)
+- Automatic map rotation
+- Ranked/competitive gameplay
+
+**Config file:** `userraw/server.cfg`  
+**Launch script:** `DedicatedServer.bat` (Windows) or `DedicatedServer.sh` (Linux)
+
+---
+
+
+
+##### Party Server (Lobby Server)
+
+A matchmaking lobby where players gather before starting matches together, similar to the original MW2 online experience.
+
+**Use this when you want:**
+
+- A pre-game lobby where players can chat and edit classes
+- Manual map/mode selection
+- A more social, casual environment
+
+**Config file:** `userraw/partyserver.cfg`  
+**Launch script:** `DedicatedLobbyServer.bat` (Windows) or `DedicatedLobbyServer.sh` (Linux)
+
+Most server hosts run Dedicated Servers. Party servers are less common and mainly used for specific communities or private groups. We recommend using a Dedicated Server.
+
+---
+---
+
+
+
+## Server Setup
+
+
+
+### Install Modern Warfare 2
+
+
+First, you need a working installation of Call of Duty: Modern Warfare 2 multiplayer.
+
+
+
+<Steps>
+
+1. Install MW2 through Steam on your host machine
+
+2. Locate your MW2 installation folder 
+    (usually `C:\Program Files (x86)\Steam\steamapps\common\Call of Duty Modern Warfare 2`)
+
+3. Copy the entire MW2 folder to a new dedicated location for your server 
+    (e.g., `C:\GameServers\MW2-Server`)
+
+</Steps>
+
+
+
+:::note[**For Linux users:**]
+If you're running a server on Linux, you'll need to use Wine or Proton to run the Windows server files. The game runs well through compatibility layers, but setup requires additional steps beyond this guide's scope.
+:::
+
+
+### Install IW4x Raw Files
+
+The raw files contain essential game assets needed for the IW4x client to function.
+
+
+
+<Steps>
+
+1. Download the latest raw files:
+
+    <LinkButton
+        href="https://github.com/iw4x/iw4x-rawfiles/releases/latest/download/release.zip"
+        variant="primary"
+        icon="seti:windows"
+        iconPlacement="start"
+    >IW4x Raw Files (Latest Release)</LinkButton>
+
+2. Extract the ZIP archive
+
+3. Move **all extracted contents** into your MW2 server folder
+     `C:\GameServers\MW2-Server`
+
+</Steps>
+
+
+
+### Install IW4x Client DLL & Client Launcher
+
+The client DLL is the core IW4x modification that enables the enhanced features and dedicated server functionality.
+
+
+
+<Steps>
+
+1. Download the latest DLL: 
+
+    <LinkButton
+        href="https://github.com/iw4x/iw4x-client/releases/latest/download/iw4x.dll"
+        variant="primary"
+        icon="seti:windows"
+        iconPlacement="start"
+        >IW4x Clients DLL (Latest Release)</LinkButton>
+2. Place `iw4x.dll` directly into your MW2 server folder `C:\GameServers\MW2-Server`
+
+</Steps>
+
+<Steps>
+1. Download the latest client binary
+
+    <LinkButton
+        href="https://github.com/iw4x/launcher/releases/latest/download/iw4x-launcher.exe"
+        variant="primary"
+        icon="seti:windows"
+        iconPlacement="start"
+        >IW4x Windows(Latest Release)</LinkButton>
+
+    <LinkButton
+        href="https://github.com/iw4x/launcher/releases/latest/download/iw4x-launcher-x86_64-unknown-linux-gnu.tar.gz"
+        variant="primary"
+        icon="linux"
+        iconPlacement="start"
+        >IW4x Linux(Latest Release)</LinkButton>
+
+2. Place `iw4x.exe`(Windows) or `iw4x-launcher`(Linux) directly into your MW2 server folder `C:\GameServers\MW2-Server`
+
+</Steps>
+
+
+### Install Server Configuration Files
+
+The configuration files and launch scripts make it easy to start and customize your server.
+
+
+
+<Steps>
+
+1. Download the server configs: 
+
+    <LinkButton
+        href="https://github.com/iw4x/iw4-server-configs/archive/refs/heads/main.zip"
+        varaint="primary"
+        icon="seti:windows"
+        iconPlacement="start"
+        >IW4x Server Configs (Latest Versions)</LinkButton>
+2. Extract the ZIP archive
+3. Move **everything inside the extracted folder** into your MW2 server folder `C:\GameServers\MW2-Server`
+
+</Steps>
+
+
+
+### (Optional) Optimize Installation Size
+
+Since you're running a dedicated server and want to save disk space or improve startup times, you can remove unnecessary files.
+
+**Using the IW4x Shrink Tool:**
+
+
+
+<Steps>
+
+
+
+1. Download the tool: 
+
+    <LinkButton
+        href="https://github.com/iw4x/shrink/archive/refs/heads/main.zip"
+        varaint="primary"
+        icon="seti:windows"
+        iconPlacement="start"
+        >IW4x Shrink (Latest Version)</LinkButton>
+
+2. [Follow the instructions in](https://github.com/iw4x/shrink?tab=readme-ov-file#usage) the repository/zip file to remove single-player assets, language files, and other unnecessary data
+
+
+
+</Steps>
+
+
+
+Only use the shrink tool on dedicated server installations. Do not use it on your IW client, as it will remove files needed to play the game normally.
+
+Typically reduces installation from ~12GB to ~7-8GB for dedicated servers.
+
+
+
+## Final Folder Structure
+
+<FileTree>
+- C:
+    - GameServers
+      - MW2-Server
+        - iw4x/
+        - userraw/
+        - zone/
+        - DedicatedLobbyServer.bat
+        - DedicatedLobbyServer.sh
+        - DedicatedLobbyServerLAN.bat
+        - DedicatedLobbyServer.sh
+        - DedicatedServer.bat
+        - DedicatedServer.sh
+        - DedicatedServerLAN.bat
+        - DedicatedServerLAN.sh
+        - iw4x.exe
+        - iw4x.dll
+
+</FileTree>
+:::note
+You may have more folders/files than shown above, that is fine. These are just the required folders/files to get a server running.
+:::
+---
+---
+
+
+
+## Server Configuration
+
+
+Now that the server files are installed, we need to configure your server settings.
+
+
+
+### Choosing Your Server Type
+
+Most hosts start with a **Dedicated Server**. The default configuration files are located in the `userraw` folder:
+
+- `server.cfg` - Dedicated server (standard multiplayer)
+- `serverlan.cfg` - LAN-only Dedicated server
+- `partyserver.cfg` - Party/lobby server (vanilla mw2 experience)
+
+For this guide, we'll focus on configuring `server.cfg` for a public dedicated server.
+
+
+
+### Editing Configuration File
+
+
+1. Navigate to your `userraw` folder
+2. Open `server.cfg` with your text editor (Visual Studio Code, Notepad++, etc.)
+3. Review the heavily commented configuration file
+
+The config file is organized into sections with explanatory comments. Here are the most important settings to customize:
+
+`server.cfg`
+
+```bash
+// Server Identity
+set sv_hostname "Your Server Name Here"  // This is the name in the server browser
+set sv_motd "Welcome to my server!"      // Message of the day shown to players joining
+
+// Server Visibility
+seta g_password ""                       // Leave empty for public, or set a password for private
+```
+
+**Server hostname tips:**
+
+- Keep it descriptive but concise (e.g., "24/7 Terminal TDM" or "Search & Destroy Only")
+- Avoid special characters that might not display correctly
+- Include your region if relevant (e.g., "EU" or "US East")
+  
+Examples:
+
+    Good Names:
+
+       - **(ClanName) EU Vanilla Maps - TDM 24/7**
+       - **[US] S&D - BEST MAPS 24/7**
+       - **[ClanName] TRICKSHOT RUST|HIGHRISE|ESTATE [EU]**
+       - **(US-EST) Tricky Myers**
+
+    These names tell users what clan may run them, the location, and what the server is about. Simple, and easy to find what users want.
+    
+    Bad Names:
+       - **LuL Server #1**
+       - **Trickshot Here**
+       - **Goofys RUST server**
+       - **[EU] Maps 24/7**
+    These names in comparison tell users nothing useful besides a possible map.
+
+You should include a location, the server type, and if possible who runs it.
+
+
+
+### Game Mode Configuration
+
+`server.cfg`
+
+```bash
+// Game Type
+set sv_gametype "war"                    // Game mode (see list below)
+set sv_maprotation "gametype war map mp_terminal gametype war map mp_rust"
+
+// Common game types:
+// "war"  = Team Deathmatch
+// "dm"   = Free-for-All  
+// "sab"  = Sabotage
+// "sd"   = Search & Destroy
+// "koth" = Headquarters
+// "dom"  = Domination
+```
+
+**About map rotation:** The `sv_maprotation` setting controls which maps and modes your server cycles through. The format is: `gametype [mode] map [mapname]` repeated for each map you want in rotation.
+
+
+
+### Moderation Settings
+
+`server.cfg`
+
+```bash
+// Admin Settings
+set rcon_password ""                     // Set a strong password for remote admin access
+```
+
+:::Warning[RCON Security]
+If you set an RCON password, treat it like a root password. Never share it publicly or with untrusted individuals. RCON gives complete control over your server.
+:::
+
+
+
+### Saving Your Configuration
+
+After editing your settings:
+
+1. Save the file (`Ctrl+S` in most editors)
+2. Ensure you haven't accidentally added extra words or broke the formatting.
+
+---
+---
+
+
+
+## Network Configuration
+
+For players to connect to your server, you need to configure your network to allow incoming connections.
+
+
+
+### Understanding Ports
+
+IW4x servers communicate using **UDP port 28960** by default. This port handles all game traffic (player connections, gameplay data, server queries).
+
+**You need to:**
+
+- Open port `28960` (UDP) in your firewall
+- Forward port `28960` (UDP) through your router (if hosting from home)
+- Allow both inbound and outbound traffic on this port
+
+
+
+### Port Forwarding (Home Hosting)
+
+If you're hosting from home, you need to configure port forwarding on your router:
+
+1. Find your router's IP address
+2. Log into your router's admin panel (check your router manual for default credentials)
+3. Navigate to the Port Forwarding section
+4. Create a new port forward rule:
+    - **External Port:** `28960`
+    - **Internal Port:** `28960`
+    - **Protocol:** UDP
+    - **Internal IP:** Your server computer's local IP address
+5. Save and apply the changes
+
+
+
+:::note
+Every router interface is different. If you're having trouble, search for "[your router name] port forwarding guide" online. 
+:::
+
+
+
+### Firewall Configuration (VPS/Dedicated Server)
+
+If you're using a VPS or dedicated server:
+
+**Windows Server:**
+
+```cmd
+netsh advfirewall firewall add rule name="IW4x Server" dir=in action=allow protocol=UDP localport=28960
+netsh advfirewall firewall add rule name="IW4x Server" dir=out action=allow protocol=UDP localport=28960
+```
+
+**Linux (UFW):**
+
+```bash
+sudo ufw allow 28960/udp comment 'Default IW4x Port'
+```
+
+**Linux (iptables):**
+
+```bash
+sudo iptables -A INPUT -p udp --dport 28960 -j ACCEPT -m comment --comment "Default IW4x Port"
+sudo iptables -A OUTPUT -p udp --sport 28960 -j ACCEPT -m comment --comment "Default IW4x Port"
+```
+
+
+
+### Changing the Default Port
+
+If you need to run multiple servers or port `28960` is already in use:
+
+1. Edit your launch script (e.g., `DedicatedServer.bat`)
+2. Find the line with `set GamePort=28960`
+3. Change `28960` to your desired port number
+4. Update or Add to your firewall and port forwarding rules accordingly
+
+---
+---
+
+
+
+## Starting Your Server
+
+You're now ready to start your server!
+
+
+
+### Windows
+
+1. Navigate to your MW2 server folder (`C:\GameServers\MW2-Server`)
+2. Start `DedicatedServer.bat` (for a Dedicated server) or `DedicatedLobbyServer.bat` (for a party server)
+3. A console window will open showing server startup messages, you may see errors or missing files. Do not be worried unless the next steps below fail.
+
+
+
+### Linux
+
+1. Navigate to your MW2 server folder (`C:\GameServers\MW2-Server`)
+2. Start `DedicatedServer.sh` (for a Dedicated server) or `DedicatedLobbyServer.sh` (for a party server)
+3. Your terminal will start showing server startup messages, you may see errors or missing files. Do not be worried unless the next steps below fail.
+
+
+
+### Verify Your Server is Running
+
+**Check the console output:**
+
+- Look for `------- Game Initialization -------` or MapRotation
+![Game Initialization](@/assets/img/hosting/iw4x_server_verify.png)
+- Check that the map has loaded without errors
+
+**Test connectivity:**
+
+
+
+<Steps>
+
+1. Open IW4x on another computer or ask a friend to test.
+2. Open the server browser.
+3. Search for your server name or filter by map/mode.
+4. Try connecting to verify everything works.
+
+
+
+</Steps>
+
+
+
+:::note[Finding Server]
+You can also use tools linked below to search for a server through a nice webUI interface.
+:::
+
+
+
+<LinkCard 
+    title="RaidMax" 
+    href="http://api.raidmax.org/servers" 
+    description="Search for servers on IW4x using public API"
+/>
+
+
+
+<LinkCard
+    title="CodServers"
+    href="https://codservers.xyz/iw4x"
+    description="Newer and updated interface like RaidMax"
+/>
+
+
+
+<LinkCard
+    title="GameServe"
+    href="https://gameserve.rs/?platform=iw4x"
+    description="Newer and updated interface like RaidMax"
+/>
+
+
+
+**If your server doesn't appear:**
+
+- Double-check port forwarding is configured correctly (can check with tools online)
+- Verify your firewall allows the connection
+- Ensure `sv_hostname` is set in your config (empty names don't show in browser)
+- Try connecting directly using the console: `connect [your_ip]:28960`
+
+
+
+### Keeping Your Server Running
+
+**For Windows:** Keep the console window/process open. Closing it will shut down the server.
+
+**For Linux or 24/7 hosting:** Use a process manager like `screen`, `tmux`, or `systemd` to keep the server running even when you disconnect from SSH.
+
+---
+---
+
+
+
+## Server Administration
+
+Once your server is running, you'll want tools to manage it effectively.
+
+
+
+### IW4MAdmin (Recommended)
+
+IW4MAdmin is a powerful web-based administration tool designed specifically for IW4x servers. IW4MAdmin is highly recommended for public servers or communities with multiple admins. For small private servers with friends, it may be overkill.
+
+
+**Features:**
+
+- Web-based control panel accessible from any browser
+- Admin and moderator role management
+- Player statistics and tracking
+- Basic anti-cheat detection
+- Plugin system for extended functionality
+- Support for multiple servers from one dashboard
+
+**Installation:**
+
+1. Download IW4MAdmin: [IW4MAdmin GitHub](https://github.com/RaidMax/IW4M-Admin)
+2. Follow the setup instructions in the repository
+3. Configure it to connect to your server via RCON
+
+**Plugin Store:** Extend IW4MAdmin with community plugins: [IW4MAdmin Plugin Store](https://store.raidmax.org/)
+
+
+
+### RCON (Remote Console)
+
+RCON allows you to execute server commands remotely without direct access to the server console.
+
+**Setting up RCON:**
+
+1. Set a strong password in `server.cfg`:
+
+```bash
+   set rcon_password "your_secure_password_here"
+```
+
+2. Connect using an RCON client or in-game:
+
+```bash
+   /rcon login your_secure_password_here
+   /rcon [command]
+```
+
+**Useful RCON commands:**
+
+- `/rcon status` - List connected players
+- `/rcon map mp_terminal` - Change map
+- `/rcon g_gametype war` - Change game mode
+- `/rcon kick [player]` - Kick a player
+- `/rcon ban [player]` - Ban a player
+
+
+
+:::danger[Security Warning]
+
+RCON passwords give complete control over your server. Use a strong, unique password and only share it with trusted administrators. Never post your RCON password in public channels or configuration files/logs you share online.
+:::
