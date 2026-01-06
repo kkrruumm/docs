@@ -7,6 +7,12 @@ description: Setup and host servers on IW4x
 
 import { Steps, LinkCard, LinkButton, FileTree, Icon } from '@astrojs/starlight/components';
 
+import Video from '@/components/Video.astro';
+import drag_client_files from "@/assets/vid/hosting/hosting_drag_client_files.mp4"
+import drag_game_files from "@/assets/vid/hosting/hosting_drag_game_files.mp4"
+import drag_raw_files from "@/assets/vid/hosting/hosting_drag_raw_files.mp4"
+import drag_server_files from "@/assets/vid/hosting/hosting_drag_server_files.mp4"
+import server_shrink from "@/assets/vid/hosting/hosting_server_shrink.mp4"
 
 
 ## Prerequisites
@@ -20,13 +26,16 @@ Before you begin, make sure you have:
 1. **Required Game Files** (required for the server to run)
     
      You need a **legitimate copy of Call of Duty: Modern Warfare 2 (2009) Multiplayer**.
-     - [Steam - Call of Duty: Modern Warfare 2 (2009)](https://store.steampowered.com/app/10180/)
+
+        [Steam - Call of Duty: Modern Warfare 2 (2009)](https://store.steampowered.com/app/10180/)
     
 2. **A text editor** for editing configuration files
     
-    - [Visual Studio Code](https://code.visualstudio.com/) (recommended for beginners)
-    - [Notepad++](https://notepad-plus-plus.org/)
-    - [Sublime Text](https://www.sublimetext.com/)
+        [Visual Studio Code](https://code.visualstudio.com/) (recommended for beginners)
+
+        [Notepad++](https://notepad-plus-plus.org/)
+
+        [Sublime Text](https://www.sublimetext.com/)
 </Steps>
 
 
@@ -40,9 +49,9 @@ Do not use Windows Notepad. It doesn't handle line endings properly and may corr
 ### Hosting Requirements
 
 :::note[Exceptions]
-These may not apply to LAN servers/Users hosting privately. This mostly applies to users looking to have a public server for ALL IW4x user's.
+These points mainly apply to users running a public server for all IW4x players. They generally do not apply to LAN setups or private hosting. 
 
-Users hosting LAN/Privately can avoid port forwarding with VLAN softwares like Hamachi, Tailscale, RAdmin, etc.
+Users hosting privately or over LAN can avoid port forwarding by using VLAN software such as Hamachi, Tailscale, or RAdmin, among others.
 :::
 
 Your server needs:
@@ -58,7 +67,7 @@ Your server needs:
 For public servers that need high uptime, we strongly recommend using a Virtual Private Server (VPS) instead of hosting from home. VPS providers offer better uptime, faster connections, and avoid exposing your home network.
 
 :::
----
+
 ---
 
 
@@ -101,7 +110,7 @@ A matchmaking lobby where players gather before starting matches together, simil
 
 Most server hosts run Dedicated Servers. Party servers are less common and mainly used for specific communities or private groups. We recommend using a Dedicated Server.
 
----
+
 ---
 
 
@@ -126,6 +135,8 @@ First, you need a working installation of Call of Duty: Modern Warfare 2 multipl
 
 3. Copy the entire MW2 folder to a new dedicated location for your server 
     (e.g., `C:\GameServers\MW2-Server`)
+        <Video src={drag_game_files} />
+
 
 </Steps>
 
@@ -157,6 +168,8 @@ The raw files contain essential game assets needed for the IW4x client to functi
 
 3. Move **all extracted contents** into your MW2 server folder
      `C:\GameServers\MW2-Server`
+    <Video src={drag_raw_files} />
+
 
 </Steps>
 
@@ -180,6 +193,7 @@ The client DLL is the core IW4x modification that enables the enhanced features 
         >IW4x Clients DLL (Latest Release)</LinkButton>
 2. Place `iw4x.dll` directly into your MW2 server folder `C:\GameServers\MW2-Server`
 
+
 </Steps>
 
 <Steps>
@@ -200,6 +214,7 @@ The client DLL is the core IW4x modification that enables the enhanced features 
         >IW4x Linux(Latest Release)</LinkButton>
 
 2. Place `iw4x.exe`(Windows) or `iw4x-launcher`(Linux) directly into your MW2 server folder `C:\GameServers\MW2-Server`
+        <Video src={drag_client_files} />
 
 </Steps>
 
@@ -217,11 +232,13 @@ The configuration files and launch scripts make it easy to start and customize y
     <LinkButton
         href="https://github.com/iw4x/iw4-server-configs/archive/refs/heads/main.zip"
         varaint="primary"
-        icon="seti:windows"
+        icon="seti:github"
         iconPlacement="start"
         >IW4x Server Configs (Latest Versions)</LinkButton>
 2. Extract the ZIP archive
 3. Move **everything inside the extracted folder** into your MW2 server folder `C:\GameServers\MW2-Server`
+        <Video src={drag_server_files} />
+
 
 </Steps>
 
@@ -237,8 +254,6 @@ Since you're running a dedicated server and want to save disk space or improve s
 
 <Steps>
 
-
-
 1. Download the tool: 
 
     <LinkButton
@@ -249,7 +264,7 @@ Since you're running a dedicated server and want to save disk space or improve s
         >IW4x Shrink (Latest Version)</LinkButton>
 
 2. [Follow the instructions in](https://github.com/iw4x/shrink?tab=readme-ov-file#usage) the repository/zip file to remove single-player assets, language files, and other unnecessary data
-
+        <Video src={server_shrink} />
 
 
 </Steps>
@@ -274,7 +289,7 @@ Typically reduces installation from ~12GB to ~7-8GB for dedicated servers.
         - DedicatedLobbyServer.bat
         - DedicatedLobbyServer.sh
         - DedicatedLobbyServerLAN.bat
-        - DedicatedLobbyServer.sh
+        - DedicatedLobbyServerLAN.sh
         - DedicatedServer.bat
         - DedicatedServer.sh
         - DedicatedServerLAN.bat
@@ -283,10 +298,15 @@ Typically reduces installation from ~12GB to ~7-8GB for dedicated servers.
         - iw4x.dll
 
 </FileTree>
+
+
+
 :::note
 You may have more folders/files than shown above, that is fine. These are just the required folders/files to get a server running.
 :::
----
+
+
+
 ---
 
 
@@ -402,7 +422,7 @@ After editing your settings:
 1. Save the file (`Ctrl+S` in most editors)
 2. Ensure you haven't accidentally added extra words or broke the formatting.
 
----
+
 ---
 
 
@@ -482,7 +502,7 @@ If you need to run multiple servers or port `28960` is already in use:
 3. Change `28960` to your desired port number
 4. Update or Add to your firewall and port forwarding rules accordingly
 
----
+
 ---
 
 
@@ -496,7 +516,7 @@ You're now ready to start your server!
 ### Windows
 
 1. Navigate to your MW2 server folder (`C:\GameServers\MW2-Server`)
-2. Start `DedicatedServer.bat` (for a Dedicated server) or `DedicatedLobbyServer.bat` (for a party server)
+2. Double click `DedicatedServer.bat` (for a Dedicated server) or `DedicatedLobbyServer.bat` (for a party server)
 3. A console window will open showing server startup messages, you may see errors or missing files. Do not be worried unless the next steps below fail.
 
 
@@ -504,7 +524,7 @@ You're now ready to start your server!
 ### Linux
 
 1. Navigate to your MW2 server folder (`C:\GameServers\MW2-Server`)
-2. Start `DedicatedServer.sh` (for a Dedicated server) or `DedicatedLobbyServer.sh` (for a party server)
+2. Run `DedicatedServer.sh` (for a Dedicated server) or `DedicatedLobbyServer.sh` (for a party server) in a terminal.
 3. Your terminal will start showing server startup messages, you may see errors or missing files. Do not be worried unless the next steps below fail.
 
 
@@ -579,7 +599,7 @@ You can also use tools linked below to search for a server through a nice webUI 
 
 **For Linux or 24/7 hosting:** Use a process manager like `screen`, `tmux`, or `systemd` to keep the server running even when you disconnect from SSH.
 
----
+
 ---
 
 
