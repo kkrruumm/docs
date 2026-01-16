@@ -35,9 +35,9 @@ Thanks to **@joel_rpc** for outlining these steps.
 
 ### Linux MESA (AMD or Intel graphics cards)
 
-The environment variable `MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE=<ID>` should be applied if using Mesa drivers to tell the game what graphics card it should use, where `<ID>` is the identifier number of the graphics card you wish to use.
+The environment variable `DXVK_FILTER_DEVICE_NAME="<name>"` should be applied if using Mesa drivers to tell the game what graphics card it should use, where `<name>` is the name of the GPU you wish to use.
 
-In order to get the ID numbers of your graphics cards, you may run `vulkaninfo --summary` and look for the `Devices:` section of this output. An example of this output may be:
+In order to get the appropriate names of your graphics cards, you may run `vulkaninfo --summary` and look for the `Devices:` section of this output. An example of this output may be:
 
 ```
 Devices:
@@ -56,7 +56,7 @@ GPU1:
     ...
 ```
 
-In which case, the desired GPU would have an `<ID>` of `0`.
+In which case, the desired GPU would have a `<name>` of `AMD Radeon RX 6900 XT (RADV NAVI21)`.
 
 If you do not have the command `vulkaninfo`, please consult your Linux distributions documentation on Vulkan tools.
 
@@ -66,9 +66,11 @@ If you wish to apply this via Steam, such as in the case you are launching IW4x 
 
 1. Right click on your IW4x non-Steam game entry in your Steam library.
 2. Left click on **Properties**.
-3. Add `MESA_VK_DEVICE_SELECT_FORCE_DEFAULT_DEVICE=<ID> %command%` to the **Launch Options** section, where `<ID>` is the ID number gathered above.
+3. Add `DXVK_FILTER_DEVICE_NAME="<name>" %command%` to the **Launch Options** section, where `<name>` is the name gathered above.
 
 </Steps>
+
+Following the example above, the Steam launch arguments would be: `DXVK_FILTER_DEVICE_NAME="AMD Radeon RX 6900 XT (RADV NAVI21)" %command%`
 
 ### Linux Nvidia
 
